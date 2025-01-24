@@ -1,0 +1,9 @@
+fastapi
+openai
+pydantic
+pydantic-settings
+python-dotenv
+requests
+slack_sdk
+uvicorn
+watchfiles

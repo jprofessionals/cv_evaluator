@@ -1,0 +1,11 @@
+name: cloud_run
+description: A Python program to deploy a containerized service on Google Cloud
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+    toolchain: uv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: container-gcp-python
