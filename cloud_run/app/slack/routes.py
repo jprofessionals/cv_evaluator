@@ -75,18 +75,19 @@ async def slack_event_handler(
 
             # Extracting slack email from user id
             email = extract_email_from_user_id(user_id)
-            review = get_project_reviews(email)
+            reviews = get_project_reviews(email)
              
-            try:
-                # Send review as private message to the user
-                slack_client.chat_postMessage(
-                    channel=user_id,
-                    text=review.content,
-                )
-            except SlackApiError as e:
-                raise HTTPException(
-                    status_code=500, detail=f"Slack API Error: {e.response['error']}"
-                )
+            for review in reviews:
+                try:
+                    # Send review as private message to the user
+                    slack_client.chat_postMessage(
+                        channel=user_id,
+                        text=review.content,
+                    )
+                except SlackApiError as e:
+                    raise HTTPException(
+                        status_code=500, detail=f"Slack API Error: {e.response['error']}"
+                    )
 
     return JSONResponse(content={"status": "ok"})
 

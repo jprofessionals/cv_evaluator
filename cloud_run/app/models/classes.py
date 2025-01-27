@@ -7,17 +7,16 @@ class Review:
     description: str
     review_text: str
 
-
+    @property
+    def content(self) -> str:
+        """Output content"""
+        return f"""
+        \nEvaluert prosjekt: {self.project} (kunde: {self.customer})
+        \nEvaluering:\n{self.review_text}\n"""
 
 @dataclass
 class Reviews:
     """Represent all reviewed projects"""
     review: list[Review]
 
-    @property
-    def content(self) -> str:
-        """Output content"""
-        rev = self.review[0]
-        return f"""
-        \nEvaluert prosjekt: {rev.project} (kunde: {rev.customer})
-        \nEvaluering:\n{rev.review_text}\n"""
+    

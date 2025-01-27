@@ -5,7 +5,7 @@ from openai import OpenAI
 from core.config import settings
 from core.logging import get_logger
 from models.prompt import system_prompt, project_prompt
-from models.classes import Review, Reviews
+from models.classes import Review
 from resume.classes import Project
 
 logger = get_logger(__name__)
@@ -48,12 +48,11 @@ def get_model_response(
         logger.error(f"Failed to get model response: {e}")
         return "<FAILED>"
 
-def get_reviews(projects: list[Project]) -> Reviews:
+def get_reviews(projects: list[Project]) -> list[Review]:
     reviews = []
-    num = 0
 
     for p in projects:
-        num += 1
+        logger.info(f"Now reviewing: {p.project}")
 
         text = p.to_llm_format()
         message = project_prompt.format(text)
@@ -67,7 +66,4 @@ def get_reviews(projects: list[Project]) -> Reviews:
                 review_text=review
             )
         )
-        if num == 3:
-            break
-
-    return Reviews(reviews)
+    return reviews
