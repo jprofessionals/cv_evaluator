@@ -1,3 +1,4 @@
+from typing import Any
 from dataclasses import dataclass, field
 
 @dataclass
@@ -9,8 +10,9 @@ class User:
 @dataclass
 class Experience:
     """Represent a user's experience in CV Partner"""
-    project: list[dict[str, str]] = field(default_factory=list)
-    work: list[dict[str, str]] = field(default_factory=list)
+    project: list[dict[str, Any]] = field(default_factory=list)
+    work: list[dict[str, Any]] = field(default_factory=list)
+    summary: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -31,13 +33,13 @@ class Project:
         """
         return " ".join(["".join(role.values()) for role in self.roles])
 
-    def to_llm_format(self) -> str:
+    def to_text(self) -> str:
         """
         Output a format that is easy for language models to consume
         """
-        return f"""
-            KUNDE: {self.customer} 
-            PROSJEKT: {self.project} 
-            PROSJEKTBESKRIVELSE: {self.description} 
-            ROLLER: {self._process_roles()}
-            """
+        return (
+            f"KUNDE: {self.customer} " 
+            f"PROSJEKT: {self.project} "
+            f"PROSJEKTBESKRIVELSE: {self.description} "
+            f"ROLLER: {self._process_roles()} "
+        )

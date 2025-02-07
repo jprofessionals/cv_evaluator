@@ -1,16 +1,15 @@
-from enum import StrEnum
+from typing import Any
 
 from core.logging import get_logger
-from resume.classes import Experience, Project
+
+from resume.classes import Project
+from resume.error import SummaryParsingError
 
 logger = get_logger(__name__)
-
-
 
 # ISO 639-1 language codes, see documentation below
 # https://docs.flowcase.com/country-and-language-codes#overview--language-codes
 NOR = "no"
-
 
 def safe_parse_description(proj: dict[str, str]) -> list[dict[str, str]]:
     """Parse and extract project description"""
@@ -67,11 +66,18 @@ def safe_parse_roles(
 
     return roles
 
-def parse_experiences(experience: Experience) -> list[Project]:
+def parse_experiences(projects_list: list[dict[str, Any]]) -> list[Project]:
     projects: list[Project] = []
 
-    for project in experience.project:
-        
+    # Keep track of projects that might go unreviewed
+    # due to lack of input information
+    not_reviewed_projects: list[str] = []
+
+    for project in projects_list:
+        # Check if project is used in the resume ('disabled' = false)
+        if project["disabled"]:
+            continue
+
         customer_name = project["customer"].get(NOR, "UKJENT")       
         project_name = project["description"].get(NOR, "UKJENT")
 
@@ -87,6 +93,7 @@ def parse_experiences(experience: Experience) -> list[Project]:
             
         if not any([description, skillset, roles]):
             logger.info(f"{project_name}: important info missing: skip")
+            not_reviewed_projects.append(project_name)
             continue
 
         projects.append(
@@ -99,7 +106,37 @@ def parse_experiences(experience: Experience) -> list[Project]:
             )
         )
         
+    if not_reviewed_projects:
+        num_not_reviewed = len(not_reviewed_projects)
+        logger.info(
+            f"Will NOT review {num_not_reviewed} due to missing information."
+        )
+    
     complete_projects = len(projects)
     logger.info(f"Found {complete_projects} projects to evaluate")
 
     return projects
+
+def safe_parse_summary(summary_list: list[dict[str, Any]]) -> str:
+    """A user can have more than one summary in their CVPartner CV,
+     however, only one can be active at a time. This fn selects the
+     current active summary and notifies if there are more than one."""
+    summaries = []
+
+    for summary in summary_list:
+        # Check if summary is disabled (not used/current)
+        if summary["disabled"]:
+            continue
+        try:
+            description = summary["long_description"][NOR]
+            summaries.append(description)
+        except KeyError:
+            logger.debug(f"Missing candidate summary")
+
+    if not len(summaries) == 1:
+        e = SummaryParsingError(summary_list)
+        e.message()
+        raise e
+    
+    return summaries[0].strip()
+    

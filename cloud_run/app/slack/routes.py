@@ -9,7 +9,7 @@ from slack_sdk.signature import SignatureVerifier
 
 from core.config import settings
 from core.logging import get_logger
-from resume.process import get_project_reviews
+from resume.process import get_project_reviews, get_candidate_summary
 
 logger = get_logger(__name__)
 
@@ -76,7 +76,8 @@ async def slack_event_handler(
             # Extracting slack email from user id
             email = extract_email_from_user_id(user_id)
             reviews = get_project_reviews(email)
-             
+            #reviews = get_candidate_summary(email)
+ 
             for review in reviews:
                 try:
                     # Send review as private message to the user

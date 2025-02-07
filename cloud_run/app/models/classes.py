@@ -5,14 +5,16 @@ class Review:
     customer: str
     project: str
     description: str
-    review_text: str
+    review: str
 
     @property
     def content(self) -> str:
         """Output content"""
-        return f"""
-        \nEvaluert prosjekt: {self.project} (kunde: {self.customer})
-        \nEvaluering:\n{self.review_text}\n"""
+        return (
+            f"\nEvaluert prosjekt: {self.project}"
+            f"\nKunde: {self.customer})"
+            f"\nEvaluering:\n {self.review}"
+        )
 
 @dataclass
 class Reviews:
