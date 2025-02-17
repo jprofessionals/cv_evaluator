@@ -21,19 +21,15 @@ jobs:
 
       - name: Create virtual environment, install dependencies, activate
         run: |
+          cd cloud_run
           uv venv
           source .venv/bin/activate
-          uv pip install -r ./cloud_run/pyproject.toml
-
-      - name: Install dependencies in cloud_run folder
-        run: |
-          cd cloud_run
           uv pip install -r pyproject.toml
 
       - name: Preview Pulumi Changes
         run: |
-          source .venv/bin/activate
           cd cloud_run
+          source .venv/bin/activate
           pulumi stack select dev
           pulumi preview
         env:
