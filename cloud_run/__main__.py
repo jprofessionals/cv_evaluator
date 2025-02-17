@@ -62,34 +62,5 @@ artifact_registry_access = gcp.projects.IAMMember(
     project=service.project,
 )
 
-# Create a service account for the Slack Bot
-slack_bot_sa = gcp.serviceaccount.Account(
-    resource_name="slack-bot-sa",
-    account_id="slack-bot-access",
-    display_name="Slack Bot Service Account"
-)
-
-# Grant Cloud Run Invoker role to the slack bot service account
-iam_binding = gcp.cloudrun.IamBinding("slack-bot-access",
-    location=service.location,
-    project=service.project,
-    service=service.name,
-    role="roles/run.invoker",
-    members=[
-        f"serviceAccount:{slack_bot_sa.email}"
-    ]
-)
-
-# Create a Service Account Key (Needed for slack bot authentication)
-slack_bot_sa_key = gcp.serviceaccount.Key(
-    resource_name="slack-bot-sa-key", 
-    service_account_id=slack_bot_sa.id
-)
-
 # Export the Cloud Run service URL
 pulumi.export("service_url", service.statuses[0].url)
-
-# Output the private key (store securely)
-pulumi.export("slack_bot_private_key", slack_bot_sa_key.private_key)
-
-
