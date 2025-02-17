@@ -5,8 +5,8 @@ on:
       - main
       
 jobs:
-  up:
-    name: Preview
+  pulumi-preview:
+    name: run-pulumi-preview
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,6 +14,6 @@ jobs:
         with:
           command: preview
           stack-name: dev
-          work-dir: 
+          work-dir: ./cloud_run
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
