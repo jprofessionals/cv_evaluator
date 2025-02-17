@@ -21,7 +21,7 @@ jobs:
 
       - name: Create virtual environment, install dependencies, activate
         run: |
-          uv pip install -r ./cloud_run/pyproject.toml
+          uv pip install -r ./cloud_run/pyproject.toml --system
           source .venv/bin/activate
 
       - uses: pulumi/actions@v6
