@@ -3,7 +3,7 @@ description: A Python program to deploy a containerized service on Google Cloud
 runtime:
   name: python
   options:
-    virtualenv: venv
+    virtualenv: gh-env
     toolchain: uv
 config:
   pulumi:tags:
