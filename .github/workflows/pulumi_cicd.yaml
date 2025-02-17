@@ -33,7 +33,7 @@ jobs:
       - name: Preview Pulumi Changes
         run: |
           source .venv/bin/activate
-          pulumi stack selevt dev
+          pulumi stack dev
           pulumi preview
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
