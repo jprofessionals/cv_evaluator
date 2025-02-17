@@ -30,6 +30,8 @@ jobs:
           cd cloud_run
           uv pip install -r pyproject.toml
 
+      - run: echo $(uv pip list)
+
       - uses: pulumi/actions@v6
         with:
           command: preview
