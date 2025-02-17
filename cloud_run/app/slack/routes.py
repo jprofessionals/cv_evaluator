@@ -1,4 +1,5 @@
 from collections import deque
+from typing import Any
 
 from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -56,41 +57,47 @@ async def slack_event_handler(
             detail="Invalid request signature"
         )
 
-    # Handle event callbacks
-    event = payload.get("event", {})
+    event: dict[str, Any] = payload.get("event", {})
     event_id = payload.get("event_id")  
 
     if event_id in processed_event_ids:
         return JSONResponse(content={"status": "ignored"})
-    
     processed_event_ids.append(event_id)
 
-    # Only process messages from users, exclude bots
-    if event.get("type") == "message" and event.get("bot_id") is None:
-        user_id = event.get("user")
-        text = event.get("text")
-        
-        # Check for the trigger keyword in the message
-        if TRIGGER in text.lower():
-
-            # Extracting slack email from user id
-            email = extract_email_from_user_id(user_id)
-            reviews = get_project_reviews(email)
-            #reviews = get_candidate_summary(email)
- 
-            for review in reviews:
-                try:
-                    # Send review as private message to the user
-                    slack_client.chat_postMessage(
-                        channel=user_id,
-                        text=review.content,
-                    )
-                except SlackApiError as e:
-                    raise HTTPException(
-                        status_code=500, detail=f"Slack API Error: {e.response['error']}"
-                    )
-
+    create_and_send_reviews(event)
+    
     return JSONResponse(content={"status": "ok"})
 
 
-    
+def send_slack_message(user_id: str, text: str) -> None:
+    """Send message to slack user"""
+    try:
+        # Send text as private message to the user
+        slack_client.chat_postMessage(
+            channel=user_id,
+            text=text,
+        )
+    except SlackApiError as e:
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Slack API Error: {e.response['error']}"
+        )
+
+
+def create_and_send_reviews(event: dict[str, Any]) -> None:
+    """Process input event text and look for trigger phrase"""
+    # Exclude bot messages, look for user messages
+    if event.get("type") == "message" and event.get("bot_id") is None:
+        user_id = event.get("user")
+        email = extract_email_from_user_id(user_id)
+
+        match event.get("text").lower():
+            case "make_review":
+                reviews = get_project_reviews(email)
+            case "make_summary":
+                reviews = get_candidate_summary(email)
+            case _:
+                return
+
+        for review in reviews:
+            send_slack_message(user_id, review.content)

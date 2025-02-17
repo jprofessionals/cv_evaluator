@@ -2,3 +2,13 @@
 venv/
 .env
 __pycache__
+
+# Repos to ignore
+old/
+cloud_run_backup/
+
+# Ignore settings file
+.env
+
+# Ignore uv lock file
+uv.lock
