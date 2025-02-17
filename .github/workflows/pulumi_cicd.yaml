@@ -14,9 +14,12 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
+      - name: Create environment
+        run: uv venv
+        
       - name: Install requirements
         run: uv pip install -r ./cloud_run/pyproject.toml
-        
+
       - uses: pulumi/actions@v6
         with:
           command: preview
