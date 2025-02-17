@@ -1,4 +1,4 @@
-name: Pulumi
+name: Pulumi CI/CD preview step
 on:
   push:
     branches-ignore:
@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
       - uses: pulumi/actions@v6
         with:
           command: preview
