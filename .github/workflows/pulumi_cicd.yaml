@@ -30,16 +30,10 @@ jobs:
           cd cloud_run
           uv pip install -r pyproject.toml
 
-      - run: echo $(uv pip list)
-
-      - name: Select Pulumi Stack
-        run: |
-          source .venv/bin/activate
-          pulumi stack select dev
-
       - name: Preview Pulumi Changes
         run: |
           source .venv/bin/activate
+          pulumi stack selevt dev
           pulumi preview
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
