@@ -23,13 +23,13 @@ jobs:
         run: |
           cd cloud_run
           uv venv
-          source .venv/bin/activate
+          source venv/bin/activate
           uv pip install -r pyproject.toml
 
       - name: Preview Pulumi Changes
         run: |
           cd cloud_run
-          source .venv/bin/activate
+          source venv/bin/activate
           pulumi stack select dev
           pulumi preview
         env:
