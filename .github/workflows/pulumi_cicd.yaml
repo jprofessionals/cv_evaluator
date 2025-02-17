@@ -20,6 +20,11 @@ jobs:
           uv pip install -r ./cloud_run/pyproject.toml
           source .venv/bin/activate
 
+      - name: Install Pulumi
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          export PATH=$PATH:$HOME/.pulumi/bin
+
       - uses: pulumi/actions@v6
         with:
           command: preview
