@@ -32,8 +32,8 @@ jobs:
 
       - name: Preview Pulumi Changes
         run: |
-          cd cloud_run
           source .venv/bin/activate
+          cd cloud_run
           pulumi stack select dev
           pulumi preview
         env:
