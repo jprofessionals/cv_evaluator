@@ -25,9 +25,8 @@ jobs:
           source .venv/bin/activate
           uv pip install -r ./cloud_run/pyproject.toml --system
 
+      - run: source .venv/bin/activate 
       - uses: pulumi/actions@v6
-        run: |
-          source .venv/bin/activate
         with:
           command: preview
           stack-name: dev
