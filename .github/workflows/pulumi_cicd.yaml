@@ -14,16 +14,15 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
       - name: Create virtual environment, install dependencies, activate
         run: |
-          uv venv
           uv pip install -r ./cloud_run/pyproject.toml
           source .venv/bin/activate
-
-      - name: Install Pulumi
-        run: |
-          curl -fsSL https://get.pulumi.com | sh
-          export PATH=$PATH:$HOME/.pulumi/bin
 
       - uses: pulumi/actions@v6
         with:
