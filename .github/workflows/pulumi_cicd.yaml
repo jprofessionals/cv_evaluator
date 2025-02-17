@@ -23,9 +23,13 @@ jobs:
         run: |
           uv venv
           source .venv/bin/activate
-          uv pip install -r ./cloud_run/pyproject.toml --system
+          uv pip install -r ./cloud_run/pyproject.toml
 
-      - run: source .venv/bin/activate 
+      - name: Install dependencies in cloud_run folder
+        run: |
+          cd cloud_run
+          uv pip install -r pyproject.toml
+
       - uses: pulumi/actions@v6
         with:
           command: preview
