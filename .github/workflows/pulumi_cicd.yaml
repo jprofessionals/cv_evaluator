@@ -32,10 +32,14 @@ jobs:
 
       - run: echo $(uv pip list)
 
-      - uses: pulumi/actions@v6
-        with:
-          command: preview
-          stack-name: dev
-          work-dir: ./cloud_run
+      - name: Select Pulumi Stack
+        run: |
+          source .venv/bin/activate
+          pulumi stack select dev
+
+      - name: Preview Pulumi Changes
+        run: |
+          source .venv/bin/activate
+          pulumi preview
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
