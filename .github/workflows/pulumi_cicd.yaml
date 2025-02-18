@@ -29,7 +29,8 @@ jobs:
       - uses: pulumi/actions@v6
         with:
           command: up
-          stack-name: magnusax/dev
+          stack-name: dev
+          work-dir: ./cloud_run
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
