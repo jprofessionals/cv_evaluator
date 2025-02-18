@@ -26,13 +26,11 @@ jobs:
           source gh-env/bin/activate
           uv pip install -r pyproject.toml
         
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
       - name: Run Pulumi up
         run: |
           cd cloud_run
           source gh-env/bin/activate
+          gcloud auth configure-docker europe-west1-docker.pkg.dev
           pulumi stack select dev
           pulumi up --skip-preview
         env:
