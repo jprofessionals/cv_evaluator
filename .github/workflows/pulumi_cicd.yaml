@@ -31,7 +31,7 @@ jobs:
           cd cloud_run
           source gh-env/bin/activate
           pulumi stack select dev
-          pulumi preview
+          pulumi up
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
