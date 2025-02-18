@@ -29,7 +29,7 @@ jobs:
       - uses: pulumi/actions@v6
         with:
           command: up
-          stack-name: magnusax/my-page-jpro-test/dev
+          stack-name: magnusax/dev
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
