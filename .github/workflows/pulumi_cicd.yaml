@@ -25,9 +25,6 @@ jobs:
           uv venv gh-env
           source gh-env/bin/activate
           uv pip install -r pyproject.toml
-
-      - name: Set up Google Cloud Credentials File
-        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > ${HOME}/gcp-key.json
         
       - name: Run Pulumi preview
         run: |
@@ -37,4 +34,4 @@ jobs:
           pulumi preview
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcp-key.json
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
