@@ -62,6 +62,7 @@ service = gcp.cloudrun.Service(
     ],
 )
 
+
 # Configure IAM permissions for Cloud Run to access the image
 artifact_registry_access = gcp.projects.IAMMember(
     "artifact-registry-access",
