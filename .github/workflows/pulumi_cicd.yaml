@@ -26,6 +26,17 @@ jobs:
           source gh-env/bin/activate
           uv pip install -r pyproject.toml
 
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          export_default_credentials: true
+
+      - name: Write GCP credentials file
+        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/gcp-key.json
+        
+      - name: Set GOOGLE_APPLICATION_CREDENTIALS env variable
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcp-key.json" >> $GITHUB_ENV
 
       - name: Run Pulumi preview
         run: |
