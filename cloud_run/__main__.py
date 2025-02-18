@@ -11,6 +11,8 @@ service_name = "cv-evaluator-cloud-run-service"
 
 # Create a Google Artifact Registry
 repo_name = "my-docker-repo"
+
+
 repo = gcp.artifactregistry.Repository(
     "docker-repo",
     format="DOCKER",
@@ -23,13 +25,12 @@ repo = gcp.artifactregistry.Repository(
 docker_registry_url = f"{region}-docker.pkg.dev/{project_id}/{repo_name}"
 
 # Build and push Docker image to Artifact Registry
-image_name = f"{docker_registry_url}/my-app"
+image_name = f"{docker_registry_url}/jegerenhummer"
 image = Image(
     "my-docker-image",
     build=DockerBuildArgs(context="./app", platform="linux/amd64"),  # Path to the directory containing your Dockerfile
     image_name=image_name,
 )
-
 
 # Create a dedicated service account for Cloud Run
 sa = gcp.serviceaccount.Account(
