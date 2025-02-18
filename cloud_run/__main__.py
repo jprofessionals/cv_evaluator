@@ -14,7 +14,7 @@ repo_name = "my-docker-repo"
 
 
 repo = gcp.artifactregistry.Repository(
-    "docker-repo",
+    "docker-repo-2",
     format="DOCKER",
     location=region,
     repository_id=repo_name,
@@ -25,7 +25,7 @@ repo = gcp.artifactregistry.Repository(
 docker_registry_url = f"{region}-docker.pkg.dev/{project_id}/{repo_name}"
 
 # Build and push Docker image to Artifact Registry
-image_name = f"{docker_registry_url}/jegerenhummer"
+image_name = f"{docker_registry_url}/my-app"
 image = Image(
     "my-docker-image",
     build=DockerBuildArgs(context="./app", platform="linux/amd64"),  # Path to the directory containing your Dockerfile
