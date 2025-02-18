@@ -10,7 +10,7 @@ region = config.require("region")
 service_name = "cv-evaluator-cloud-run-service"
 
 # Create a Google Artifact Registry
-repo_name = "my-docker-repo-hailmary"
+repo_name = "my-docker-repo-magnus"
 
 repo = gcp.artifactregistry.Repository(
     "docker-repo",
