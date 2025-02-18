@@ -60,12 +60,10 @@ summary_system_prompt = (
   </ROLLE>
 
   <INNSTRUKS>
-  Bruke oppgitte retningslinjer og kriterier mellom <RETNINGSLINJER> og </RETNINGSLINJER> 
-  for å vurdere tekst mellom <SAMMENDRAG> og </SAMMENDRAG>. Fokuser på konstruktiv tilbakemelding 
-  til bruker, du skal begrunne dine vurderinger med utgangspunkt i retningslinjer og gi konkrete 
-  forslag til forbedringer. 
-  Lage et oppdatert sammendrag med referanser til erfarenheter fra prosjekter konsulenten har jobbet på. 
-  Bruk informasjonen mellom <PROSJEKTBESKRIVELSER> og </PROSJEKTBESKRIVELSER> i ditt arbeid.
+  Du skal:
+  - Bruke oppgitte retningslinjer og kriterier mellom <RETNINGSLINJER> og </RETNINGSLINJER> for å vurdere tekst mellom <SAMMENDRAG> og </SAMMENDRAG>. Fokuser på konstruktiv tilbakemelding 
+  til bruker, du skal begrunne dine vurderinger med utgangspunkt i retningslinjer og gi konkrete forslag til forbedringer. 
+  - Lage et oppdatert sammendrag med referanser til erfarenheter fra prosjekter konsulenten har jobbet på. Bruk informasjonen mellom <PROSJEKTBESKRIVELSER> og </PROSJEKTBESKRIVELSER>.
   </INNSTRUKS>
   
   <RETNINGSLINJER>

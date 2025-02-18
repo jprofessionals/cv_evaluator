@@ -30,12 +30,22 @@ image = Image(
     image_name=image_name,
 )
 
+
+# Create a dedicated service account for Cloud Run
+sa = gcp.serviceaccount.Account(
+    "cloud-run-sa",
+    account_id="run-sa",           # must be 6-30 lowercase letters/numbers
+    display_name="Cloud Run Service Account",
+)
+
+
 # Create a Google Cloud Run service
 service = gcp.cloudrun.Service(
     service_name,
     location=region,
     template=gcp.cloudrun.ServiceTemplateArgs(
         spec=gcp.cloudrun.ServiceTemplateSpecArgs(
+            service_account_name=sa.email,
             containers=[
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
                     image=image.base_image_name,  # Use the built Docker image
@@ -55,9 +65,7 @@ service = gcp.cloudrun.Service(
 # Configure IAM permissions for Cloud Run to access the image
 artifact_registry_access = gcp.projects.IAMMember(
     "artifact-registry-access",
-    member=service.statuses[0].service_account_email.apply(
-        lambda email: f"serviceAccount:{email}"
-    ),
+    member=sa.email.apply(lambda email: f"serviceAccount:{email}"),
     role="roles/artifactregistry.reader",
     project=service.project,
 )
