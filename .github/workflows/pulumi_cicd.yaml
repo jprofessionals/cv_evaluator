@@ -26,7 +26,7 @@ jobs:
           source gh-env/bin/activate
           uv pip install -r pyproject.toml
         
-      - name: Run Pulumi preview
+      - name: Run Pulumi up
         run: |
           cd cloud_run
           source gh-env/bin/activate
