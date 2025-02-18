@@ -67,7 +67,7 @@ service = gcp.cloudrun.Service(
 artifact_registry_access = gcp.projects.IAMMember(
     "artifact-registry-access",
     member=sa.email.apply(lambda email: f"serviceAccount:{email}"),
-    role="roles/artifactregistry.reader",
+    role="roles/artifactregistry.admin",
     project=service.project,
 )
 
