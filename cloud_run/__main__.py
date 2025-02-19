@@ -63,6 +63,13 @@ service = gcp.cloudrun.Service(
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
                     # Use the built Docker image
                     image=image.base_image_name, 
+                    envs=[
+                        gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
+                            name="IMAGE_DIGEST",
+                            # Changes when the image is updated
+                            value=image.base_image_name  
+                        ),
+                    ],
                 )
             ]
         )
