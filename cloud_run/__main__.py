@@ -58,13 +58,7 @@ service = gcp.cloudrun.Service(
             containers=[
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
                     # Use the built Docker image
-                    image=image.base_image_name,
-                    envs=[
-                        gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
-                            name="PORT",
-                            value="8080"
-                        )
-                    ],  
+                    image=image.base_image_name, 
                 )
             ]
         )
@@ -82,7 +76,8 @@ service = gcp.cloudrun.Service(
 artifact_registry_access = gcp.projects.IAMMember(
     "artifact-registry-access",
     member=sa.email.apply(lambda email: f"serviceAccount:{email}"),
-    role="roles/artifactregistry.reader",
+    #role="roles/artifactregistry.reader",
+    role="roles/run.sourceDeveloper",
     project=service.project,
 )
 
