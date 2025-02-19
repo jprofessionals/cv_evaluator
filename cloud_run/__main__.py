@@ -7,7 +7,7 @@ config = pulumi.Config("gcp")
 project_id = config.require("project")
 region = config.require("region")
 
-service_name = "cv-evaluator-cloud-run-service"
+service_name = "cv-evaluator-cloud-run-service-v2"
 
 # Create a Google Artifact Registry
 repo_name = "my-docker-repo"
