@@ -12,24 +12,26 @@ service_name = "cv-evaluator-cloud-run-service"
 # Create a Google Artifact Registry
 repo_name = "my-docker-repo"
 
-repo_exists = True
-try:
-    repo = gcp.artifactregistry.get_repository(
-        location=region,
-        repository_id=repo_name
-    )
-except Exception as e:
-    pulumi.log.info(f"Repository {repo_name} not found: {e}")
-    repo_exists = False
+# repo_exists = True
+# try:
+#     repo = gcp.artifactregistry.get_repository(
+#         location=region,
+#         repository_id=repo_name
+#     )
+# except Exception as e:
+#     pulumi.log.info(f"Repository {repo_name} not found: {e}")
+#     repo_exists = False
 
-if not repo_exists:
-    repo = gcp.artifactregistry.Repository(
-        "docker-repo",
-        format="DOCKER",
-        location=region,
-        repository_id=repo_name,
-        description="Docker repository for Cloud Run deployment"
-    )
+# if not repo_exists:
+
+repo = gcp.artifactregistry.Repository(
+    "docker-repo",
+    format="DOCKER",
+    location=region,
+    repository_id=repo_name,
+    description="Docker repository for Cloud Run deployment",
+    opts=pulumi.ResourceOptions(protect=True)
+)
 
 # Enable Artifact Registry for Docker
 docker_registry_url = f"{region}-docker.pkg.dev/{project_id}/{repo_name}"
