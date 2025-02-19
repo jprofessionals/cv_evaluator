@@ -23,9 +23,9 @@ app.router.include_router(slack_router)
 
 @app.get("/health")
 async def health_check():
-    return {"status": "ok, from Magnus"}
+    return {"status": "ok"}
 
 @app.get("/")
 async def read_root() -> Response:
     logger.debug("Root endpoint called")
-    return Response(f"Welcome to {settings.PROJECT_NAME} API, from Magnus!")
+    return Response(f"Welcome to {settings.PROJECT_NAME} API, from Magnus Axelsson!\n")
