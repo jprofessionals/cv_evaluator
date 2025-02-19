@@ -14,8 +14,10 @@ repo_name = "my-docker-repo"
 
 repo_exists = True
 try:
-    repo = gcp.artifactregistry.get_repository(location=region,
-        repository_id=repo_name)
+    repo = gcp.artifactregistry.get_repository(
+        location=region,
+        repository_id=repo_name
+    )
 except Exception as e:
     pulumi.log.info(f"Repository {repo_name} not found: {e}")
     repo_exists = False
@@ -70,7 +72,6 @@ service = gcp.cloudrun.Service(
         )
     ],
 )
-
 
 # Configure IAM permissions for Cloud Run to access the image
 artifact_registry_access = gcp.projects.IAMMember(

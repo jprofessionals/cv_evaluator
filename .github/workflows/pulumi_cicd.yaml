@@ -48,7 +48,6 @@ jobs:
           command: up
           stack-name: dev
           work-dir: ./cloud_run
-          refresh: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
