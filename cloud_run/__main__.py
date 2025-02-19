@@ -58,7 +58,13 @@ service = gcp.cloudrun.Service(
             containers=[
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
                     # Use the built Docker image
-                    image=image.base_image_name,  
+                    image=image.base_image_name,
+                    envs=[
+                        gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
+                            name="PORT",
+                            value="8080"
+                        )
+                    ],  
                 )
             ]
         )
