@@ -7,7 +7,7 @@ config = pulumi.Config("gcp")
 project_id = config.require("project")
 region = config.require("region")
 
-service_name = "cv-evaluator-cloud-run-service-v2"
+service_name = "cv-evaluator-cloud-run-service"
 
 # Create a Google Artifact Registry
 repo_name = "my-docker-repo"
@@ -51,6 +51,10 @@ sa = gcp.serviceaccount.Account(
 service = gcp.cloudrun.Service(
     service_name,
     location=region,
+    opts=pulumi.ResourceOptions(
+        parent=image,
+        depends_on=[image],
+    ),
     template=gcp.cloudrun.ServiceTemplateArgs(
         spec=gcp.cloudrun.ServiceTemplateSpecArgs(
             timeout_seconds=300,
