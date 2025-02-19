@@ -57,7 +57,7 @@ service = gcp.cloudrun.Service(
     ),
     template=gcp.cloudrun.ServiceTemplateArgs(
         spec=gcp.cloudrun.ServiceTemplateSpecArgs(
-            timeout_seconds=300,
+            timeout_seconds=600,
             service_account_name=sa.email,
             containers=[
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
