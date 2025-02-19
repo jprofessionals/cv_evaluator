@@ -53,6 +53,7 @@ service = gcp.cloudrun.Service(
     location=region,
     template=gcp.cloudrun.ServiceTemplateArgs(
         spec=gcp.cloudrun.ServiceTemplateSpecArgs(
+            timeout=300,
             service_account_name=sa.email,
             containers=[
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
