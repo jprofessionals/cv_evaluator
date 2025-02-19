@@ -9,7 +9,9 @@ jobs:
     name: run-pulumi-preview
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout code 
+        uses: actions/checkout@v4
       
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -26,7 +28,22 @@ jobs:
           source gh-env/bin/activate
           uv pip install -r pyproject.toml
         
-      - uses: pulumi/actions@v6
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: my-page-jpro-test
+
+      - name: Configure Docker to use gcloud as a credential helper
+        run: |
+          gcloud auth configure-docker europe-west1-docker.pkg.dev
+
+      - name: Run pulumi up
+        uses: pulumi/actions@v6
         with:
           command: up
           stack-name: dev
