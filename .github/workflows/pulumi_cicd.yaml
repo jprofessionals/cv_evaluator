@@ -46,7 +46,8 @@ jobs:
         run: |
           touch .env
           echo "${{  secrets.ACCESS_SECRETS  }}" >> .env
-
+          cat .env
+          
       - name: Run pulumi up
         uses: pulumi/actions@v6
         with:
