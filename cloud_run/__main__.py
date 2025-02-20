@@ -43,17 +43,6 @@ sa = gcp.serviceaccount.Account(
     display_name="Cloud Run Service Account",
 )
 
-
-# 
-env_values = dotenv_values("./app/.env")
-env_entries = [
-    gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
-        name=name,
-        value=value,
-    )
-    for name, value in env_values.items()
-]
-
 # Create a Google Cloud Run service
 service = gcp.cloudrun.Service(
     CLOUD_RUN_SERVICE_NAME,
@@ -73,7 +62,7 @@ service = gcp.cloudrun.Service(
                             name="IMAGE_DIGEST",
                             value=image.repo_digest  
                         ),
-                    ] + env_entries,
+                    ],
                     startup_probe=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeArgs(
                         initial_delay_seconds=120,
                         timeout_seconds=60,
