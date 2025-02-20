@@ -46,10 +46,7 @@ jobs:
         run: |
           touch .env
           echo "${{secrets.ACCESS_SECRETS}}" >> .env
-
-      - name: Test printing your secret (Remove this step in production)
-        run: |
-          cat .env
+          source .env
 
       - name: Run pulumi up
         uses: pulumi/actions@v6
