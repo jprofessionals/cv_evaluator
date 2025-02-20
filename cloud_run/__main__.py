@@ -2,31 +2,28 @@ import pulumi
 import pulumi_gcp as gcp 
 from pulumi_docker import Image, DockerBuildArgs
 
-# Set up project and region
-config = pulumi.Config("gcp")
-project_id = config.require("project")
-region = config.require("region")
 
-service_name = "cv-evaluator-cloud-run-service"
+CLOUD_RUN_SERVICE_NAME = "cv-evaluator-cloud-run-service"
+DOCKER_REPOSITORY_ID = "my-docker-repo"
+
+config = pulumi.Config("gcp")
+region = config.require("region")
+project_id = config.require("project")
 
 # Create a Google Artifact Registry
-repo_name = "my-docker-repo"
-
 repo = gcp.artifactregistry.Repository(
     "docker-repo",
     format="DOCKER",
     location=region,
-    repository_id=repo_name,
+    repository_id=DOCKER_REPOSITORY_ID,
     description="Docker repository for Cloud Run deployment",
     opts=pulumi.ResourceOptions(protect=True)
 )
 
-# Enable Artifact Registry for Docker
-docker_registry_url = f"{region}-docker.pkg.dev/{project_id}/{repo_name}"
-
 # Build and push Docker image to Artifact Registry
-image_name = f"{docker_registry_url}/my-app"
-
+docker_registry_url = (
+    f"{region}-docker.pkg.dev/{project_id}/{DOCKER_REPOSITORY_ID}"
+)
 image = Image(
     "my-docker-image",
     build=DockerBuildArgs(
@@ -34,7 +31,7 @@ image = Image(
         context="./app", 
         platform="linux/amd64"
     ),  
-    image_name=image_name,
+    image_name=f"{docker_registry_url}/my-app",
     # Ensure repo exists
     opts=pulumi.ResourceOptions(depends_on=[repo])  
 )
@@ -49,7 +46,7 @@ sa = gcp.serviceaccount.Account(
 
 # Create a Google Cloud Run service
 service = gcp.cloudrun.Service(
-    service_name,
+    CLOUD_RUN_SERVICE_NAME,
     location=region,
     opts=pulumi.ResourceOptions(
         parent=image,
@@ -57,19 +54,25 @@ service = gcp.cloudrun.Service(
     ),
     template=gcp.cloudrun.ServiceTemplateArgs(
         spec=gcp.cloudrun.ServiceTemplateSpecArgs(
-            timeout_seconds=600,
             service_account_name=sa.email,
             containers=[
                 gcp.cloudrun.ServiceTemplateSpecContainerArgs(
-                    # Use the built Docker image
                     image=image.base_image_name, 
                     envs=[
                         gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
                             name="IMAGE_DIGEST",
-                            # Changes when the image is updated
                             value=image.base_image_name  
                         ),
                     ],
+                    startup_probe=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeArgs(
+                        initial_delay_seconds=120,
+                        timeout_seconds=60,
+                        failure_threshold=3,
+                        http_get=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeHttpGetArgs(
+                            path="/health", 
+                            port=8080    
+                        )
+                    ),
                 )
             ]
         )
@@ -83,11 +86,10 @@ service = gcp.cloudrun.Service(
     ],
 )
 
-# Configure IAM permissions for Cloud Run to access the image
+# Configure IAM permissions for Cloud Run
 artifact_registry_access = gcp.projects.IAMMember(
     "artifact-registry-access",
     member=sa.email.apply(lambda email: f"serviceAccount:{email}"),
-    #role="roles/artifactregistry.reader",
     role="roles/run.sourceDeveloper",
     project=service.project,
 )
