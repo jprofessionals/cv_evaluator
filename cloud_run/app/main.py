@@ -28,4 +28,4 @@ async def health_check():
 @app.get("/")
 async def read_root() -> Response:
     logger.debug("Root endpoint called")
-    return Response(f"Welcome to {settings.PROJECT_NAME} API. Created by: MAX\n")
+    return Response(f"Welcome to {settings.PROJECT_NAME} API. Created by: *** Maggi Axelsson ***\n")
