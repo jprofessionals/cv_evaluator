@@ -1,7 +1,7 @@
 import pulumi
 import pulumi_gcp as gcp 
 from pulumi_docker import Image, DockerBuildArgs
-
+from dotenv import dotenv_values
 
 CLOUD_RUN_SERVICE_NAME = "cv-evaluator-cloud-run-service"
 DOCKER_REPOSITORY_ID = "my-docker-repo"
@@ -44,6 +44,16 @@ sa = gcp.serviceaccount.Account(
 )
 
 
+# 
+env_values = dotenv_values("./app/.env")
+env_entries = [
+    gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
+        name=name,
+        value=value,
+    )
+    for name, value in env_values.items()
+]
+
 # Create a Google Cloud Run service
 service = gcp.cloudrun.Service(
     CLOUD_RUN_SERVICE_NAME,
@@ -63,7 +73,7 @@ service = gcp.cloudrun.Service(
                             name="IMAGE_DIGEST",
                             value=image.repo_digest  
                         ),
-                    ],
+                    ] + env_entries,
                     startup_probe=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeArgs(
                         initial_delay_seconds=120,
                         timeout_seconds=60,

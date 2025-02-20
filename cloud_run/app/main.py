@@ -1,13 +1,13 @@
-
+import os
 from fastapi import FastAPI, Response
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 from core.config import settings
 from core.logging import setup_logging, get_logger
 from slack.routes import router as slack_router
 
-
-load_dotenv(".env")
+find_dotenv()
+load_dotenv()
 
 # Set up logging config
 setup_logging()
@@ -29,4 +29,4 @@ async def health_check():
 @app.get("/")
 async def read_root() -> Response:
     logger.debug("Root endpoint called")
-    return Response(f"Welcome to {settings.PROJECT_NAME} API. Created by: *** Maggi Axelsson ***\n")
+    return Response(f"Welcome to {settings.PROJECT_NAME} API. {settings}")
