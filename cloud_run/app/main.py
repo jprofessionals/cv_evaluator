@@ -6,7 +6,8 @@ from core.config import settings
 from core.logging import setup_logging, get_logger
 from slack.routes import router as slack_router
 
-load_dotenv()
+
+load_dotenv(".env")
 
 # Set up logging config
 setup_logging()
