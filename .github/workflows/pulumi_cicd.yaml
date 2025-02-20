@@ -42,6 +42,15 @@ jobs:
         run: |
           gcloud auth configure-docker europe-west1-docker.pkg.dev
 
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "${{secrets.ACCESS_SECRETS}}" >> .env
+
+      - name: Test printing your secret (Remove this step in production)
+        run: |
+          cat .env
+
       - name: Run pulumi up
         uses: pulumi/actions@v6
         with:
