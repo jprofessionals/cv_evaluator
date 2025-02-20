@@ -67,6 +67,7 @@ service = gcp.cloudrun.Service(
                     startup_probe=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeArgs(
                         initial_delay_seconds=120,
                         timeout_seconds=60,
+                        period_seconds=240,
                         failure_threshold=3,
                         http_get=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeHttpGetArgs(
                             path="/health", 
