@@ -31,7 +31,7 @@ image = Image(
         context="./app", 
         platform="linux/amd64"
     ),  
-    image_name=f"{docker_registry_url}/my-app",
+    image_name=f"{docker_registry_url}/my-app:latest",
     # Ensure repo exists
     opts=pulumi.ResourceOptions(depends_on=[repo])  
 )
@@ -61,7 +61,7 @@ service = gcp.cloudrun.Service(
                     envs=[
                         gcp.cloudrun.ServiceTemplateSpecContainerEnvArgs(
                             name="IMAGE_DIGEST",
-                            value=image.base_image_name  
+                            value=image.repo_digest  
                         ),
                     ],
                     startup_probe=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeArgs(
