@@ -7,16 +7,16 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "CV Evaluator"
     DEBUG: bool = False
 
-    CV_PARTNER_API_KEY: str = "a"
+    CV_PARTNER_API_KEY: str
 
     # Token to OpenAI service
-    OPENAI_API_KEY: str = "b"
+    OPENAI_API_KEY: str
 
     # Tokens to slack service
-    SLACK_BOT_TOKEN: str = "c"
-    SLACK_CLIENT_ID: str = "d"
-    SLACK_CLIENT_SECRET: str = "e"
-    SLACK_SIGNING_SECRET: str = "f"
+    SLACK_BOT_TOKEN: str
+    SLACK_CLIENT_ID: str
+    SLACK_CLIENT_SECRET: str
+    SLACK_SIGNING_SECRET: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

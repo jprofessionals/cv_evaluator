@@ -1,12 +1,12 @@
-name: Pulumi CI/CD preview step
+name: Pulumi CI/CD workflow
 on:
   push:
     branches-ignore:
       - main
       
 jobs:
-  pulumi-preview:
-    name: run-pulumi-preview
+  pulumi-up:
+    name: Run pulumi to build infrastructure
     runs-on: ubuntu-latest
     steps:
 
