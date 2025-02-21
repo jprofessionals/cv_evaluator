@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     """Application settings."""
 
     PROJECT_NAME: str = "CV Evaluator"
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     CV_PARTNER_API_KEY: str
 
