@@ -1,11 +1,8 @@
-
-
-# Config for startup probe
-
+# GCP docs: https://cloud.google.com/run/docs/configuring/healthchecks#http-startup-probes
 startup_probe:
   initial_delay_seconds: 1
-  timeout_seconds: 10
-  period_seconds: 30
+  timeout_seconds: 1
+  period_seconds: 10
   failure_threshold: 3
   path: "/health"
   port: 8080
