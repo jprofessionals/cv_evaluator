@@ -1,0 +1,59 @@
+name: Pulumi CI/CD workflow
+on:
+  push:
+    branches-ignore:
+      - main
+      
+jobs:
+  pulumi-up:
+    name: Run pulumi to build infrastructure
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code 
+        uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Create virtual environment, install dependencies, activate
+        run: |
+          cd cloud_run
+          uv venv gh-env
+          source gh-env/bin/activate
+          uv pip install -r pyproject.toml
+        
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: my-page-jpro-test
+
+      - name: Configure Docker to use gcloud as a credential helper
+        run: |
+          gcloud auth configure-docker europe-west1-docker.pkg.dev
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "${{ secrets.ACCESS_SECRETS }}" >> ./cloud_run/app/.env
+
+      - name: Run pulumi up
+        uses: pulumi/actions@v6
+        with:
+          command: up
+          stack-name: dev
+          work-dir: ./cloud_run
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          
