@@ -22,12 +22,9 @@ slack_client = WebClient(token=settings.SLACK_BOT_TOKEN)
 # User a simply queue to handle deduplication of event handling
 processed_event_ids = deque(maxlen=100)
 
-TRIGGER: str = "make_review"
-
 def extract_email_from_user_id(user_id: str) -> str:
-    """
-    Poll the client for user's email address
-    """
+    """Poll the client for user's email address"""
+
     result = slack_client.users_info(user=user_id)
     try:
         email_address = result["user"]["profile"]["email"]
@@ -86,15 +83,17 @@ def send_slack_message(user_id: str, text: str) -> None:
 
 def create_and_send_reviews(event: dict[str, Any]) -> None:
     """Process input event text and look for trigger phrase"""
-    # Exclude bot messages, look for user messages
+
     if event.get("type") == "message" and event.get("bot_id") is None:
         user_id = event.get("user")
         email = extract_email_from_user_id(user_id)
 
         match event.get("text").lower():
             case "make_review":
+                logger.info(f"Flow triggered: Project reviews")
                 reviews = get_project_reviews(email)
             case "make_summary":
+                logger.info(f"Flow triggered: Summary review")
                 reviews = get_candidate_summary(email)
             case _:
                 return

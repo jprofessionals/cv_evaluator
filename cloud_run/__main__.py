@@ -1,14 +1,24 @@
-import pulumi
 import pulumi_gcp as gcp 
+import pulumi
+import yaml
+
+from pathlib import Path
 from pulumi_docker import Image, DockerBuildArgs
-from dotenv import dotenv_values
 
 CLOUD_RUN_SERVICE_NAME = "cv-evaluator-cloud-run-service"
 DOCKER_REPOSITORY_ID = "my-docker-repo"
+IMAGE_TAG = "latest"
 
 config = pulumi.Config("gcp")
 region = config.require("region")
 project_id = config.require("project")
+
+
+with Path("infra.yaml").open("r") as file:
+    cfg = yaml.safe_load(file)
+    probe_cfg = cfg["startup_probe"]
+
+
 
 # Create a Google Artifact Registry
 repo = gcp.artifactregistry.Repository(
@@ -31,7 +41,7 @@ image = Image(
         context="./app", 
         platform="linux/amd64"
     ),  
-    image_name=f"{docker_registry_url}/my-app:latest",
+    image_name=f"{docker_registry_url}/my-app:{IMAGE_TAG}",
     # Ensure repo exists
     opts=pulumi.ResourceOptions(depends_on=[repo])  
 )
@@ -64,13 +74,13 @@ service = gcp.cloudrun.Service(
                         ),
                     ],
                     startup_probe=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeArgs(
-                        initial_delay_seconds=120,
-                        timeout_seconds=60,
-                        period_seconds=240,
-                        failure_threshold=3,
+                        initial_delay_seconds=probe_cfg["initial_delay_seconds"],
+                        timeout_seconds=probe_cfg["timeout_seconds"],
+                        period_seconds=probe_cfg["period_seconds"],
+                        failure_threshold=probe_cfg["failure_threshold"],
                         http_get=gcp.cloudrun.ServiceTemplateSpecContainerStartupProbeHttpGetArgs(
-                            path="/health", 
-                            port=8080    
+                            path=probe_cfg["path"], 
+                            port=probe_cfg["port"]    
                         )
                     ),
                 )

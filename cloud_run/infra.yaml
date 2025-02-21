@@ -1,0 +1,11 @@
+
+
+# Config for startup probe
+
+startup_probe:
+  initial_delay_seconds: 1
+  timeout_seconds: 10
+  period_seconds: 30
+  failure_threshold: 3
+  path: "/health"
+  port: 8080
