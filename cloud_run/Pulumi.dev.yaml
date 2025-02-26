@@ -1,0 +1,8 @@
+config:
+  cloud_run:appPath: app
+  cloud_run:concurrency: "50"
+  cloud_run:containerPort: "8080"
+  cloud_run:cpu: "1"
+  cloud_run:memory: 1Gi
+  gcp:project: my-page-jpro-test
+  gcp:region: europe-west1

@@ -1,0 +1,11 @@
+*.pyc
+venv/
+.venv/
+__pycache__
+
+# Repos to ignore
+old/
+cloud_run_backup/
+
+# Ignore settings file
+.env
